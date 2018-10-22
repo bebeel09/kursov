@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 
+
 namespace ConstructMetod
 {
     public partial class Form1 : Form
@@ -9,11 +10,15 @@ namespace ConstructMetod
 
     {
         string searchMain = "ConstructMetod";
-
+        int iPage = -1;
+        
 
         public Form1()
         {
             InitializeComponent();
+            listBox1.ContextMenuStrip = contextMenuStrip1;
+            tabControl2.ContextMenuStrip = contextMenuStrip2;
+            
         }
 
         public String FileNameDialog()
@@ -51,24 +56,23 @@ namespace ConstructMetod
 
         public void createWorkPanel(ListBox mlistBox, string name, string search)
         {
-            using (StreamReader sr = new StreamReader(Path.Combine(search, mlistBox.SelectedItem.ToString()), System.Text.Encoding.Default))
+            using (StreamReader sr = new StreamReader(Path.Combine(search, mlistBox.SelectedItem.ToString()), System.Text.Encoding.ASCII))
             {
 
 
                 TabPage tp = new TabPage();
-
+                tp.Name = name;
                 tp.Text = name;
                 tp.Width = tabControl1.Width - 10;
                 tp.Height = tabControl1.Height - 10;
 
-                RichTextBox TB = new RichTextBox();
-                TB.Name = "rtb name";
-                TB.Dock = DockStyle.Fill;
+                RichTextBox RTB = new RichTextBox();
+                RTB.Name = searchMain+"\\"+name;
+                
+                RTB.Dock = DockStyle.Fill;
+                RTB.Text = sr.ReadToEnd();
 
-
-                TB.Text = sr.ReadToEnd();
-                Console.Write(sr.ReadToEnd());
-                tp.Controls.Add(TB);
+                tp.Controls.Add(RTB);
                 tabControl2.TabPages.Add(tp);
             }
 
@@ -128,7 +132,7 @@ namespace ConstructMetod
         {
             if (e.Button == MouseButtons.Right)
             {
-                listBox1.ContextMenuStrip = contextMenuStrip1;
+             
                 int index = listBox1.IndexFromPoint(e.X, e.Y);
                 if (index != -1)
                 {
@@ -172,6 +176,7 @@ namespace ConstructMetod
 
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+         
             //добавление в строку пути название папки   
 
             if (listBox1.SelectedItem != null)
@@ -183,7 +188,21 @@ namespace ConstructMetod
                 }
                 else
                 {
-                    createWorkPanel(listBox1, listBox1.SelectedItem.ToString(), searchMain);
+                   
+                    bool controlName = false;
+                    for (int i = 0; i < tabControl2.TabPages.Count; i++)
+                    {       
+                        if (tabControl2.TabPages[i].Name == listBox1.SelectedItem.ToString())
+                        {
+                            controlName = !controlName;
+                            tabControl2.SelectedIndex=i;
+                            break;
+                        }
+                    }
+                    if (controlName == false)
+                    {
+                        createWorkPanel(listBox1, listBox1.SelectedItem.ToString(), searchMain);
+                    }
                 }
             }
         }
@@ -233,15 +252,41 @@ namespace ConstructMetod
                     dirDelete.Delete(true);
                 }
             }
-                if (Path.GetExtension(Path.Combine(searchMain, listBox1.SelectedItem.ToString())) != "")
+            if (Path.GetExtension(Path.Combine(searchMain, listBox1.SelectedItem.ToString())) != "")
+            {
+                if (fileDelete.Exists)
                 {
-                    if (fileDelete.Exists)
-                    {
-                        File.Delete(Path.Combine(searchMain, listBox1.SelectedItem.ToString()));
-                    }
+                    File.Delete(Path.Combine(searchMain, listBox1.SelectedItem.ToString()));
                 }
-                loadDir(searchMain, listBox1);
-            
+            }
+            loadDir(searchMain, listBox1);
+
+        }
+
+        private void contextMenuStrip2_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+           System.Drawing.Point pt = tabControl2.PointToClient(Cursor.Position);
+            iPage = -1;
+            for (int i = 0; i < tabControl2.TabCount; i++)
+            {
+                if (tabControl2.GetTabRect(i).Contains(pt))
+                    iPage = i;
+            }          
+        }
+
+        private void Закрыть_ВкладкуToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            tabControl2.TabPages.Remove(tabControl2.TabPages[iPage]);
+        }
+
+        private void Сохранить_ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var rull_RTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
+            Console.WriteLine(searchMain + "\\" + rull_RTB.Name);
+            rull_RTB.SaveFile(rull_RTB.Name);
+
+
+
         }
     }
 }
