@@ -15,6 +15,23 @@ namespace ConstructMetod
         public fileNameDialog()
         {
             InitializeComponent();
+            expansion.SelectedIndex = 0;
+        }
+
+        
+
+        private void fileOrFolder_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (fileOrFolder.Text != "")
+            {
+                label2.Visible = false;
+                button1.Enabled = true;
+            }
+            else
+            {
+                label2.Visible = true;
+                button1.Enabled = false;
+            }
         }
     }
 }

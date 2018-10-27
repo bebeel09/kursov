@@ -21,20 +21,49 @@ namespace ConstructMetod
             
         }
 
-        public String FileNameDialog()
+        public String FileNameDialog(int numberOperation)
         {
+            string name = "";
+            string tochka = "";
+            int kostil = 0;
             DialogResult dr = new DialogResult();
             fileNameDialog frm2 = new fileNameDialog();
+            switch(numberOperation)
+            {
+                case 1: // операция папки
+                    frm2.textPresent.Text = "Введите название папки:";
+                    frm2.formatPreaent.Visible = false;
+                    frm2.expansion.Visible = false;
+                    tochka = "";
+                    kostil = 1;
+                    break;
+                case 2: //операция файла
+                    frm2.textPresent.Text = "Введите название файла:";
+                    frm2.formatPreaent.Visible = true;
+                    frm2.expansion.Visible = true;
+                    tochka = ".";
+                    kostil = 2;
+                    break;
+            }
             dr = frm2.ShowDialog();
-            string name = "";
+
             if (dr == DialogResult.OK)
             {
-                name = frm2.richTextBox1.Text.ToString();
+                if (kostil == 1) {
+                   
+                    name = frm2.fileOrFolder.Text.ToString();
+                    Console.WriteLine(name+"2");
+                }
+                else if (kostil==2){
+                    name = frm2.fileOrFolder.Text.ToString() + tochka.ToString() + frm2.expansion.Text.ToString();
+                    Console.WriteLine(name);
+                }
             }
             else if (dr == DialogResult.Cancel)
             {
                 frm2.Close();
             }
+            
             return name;
         }
 
@@ -54,27 +83,28 @@ namespace ConstructMetod
             catch (Exception ms) { }
         }
 
-        public void createWorkPanel(ListBox mlistBox, string name, string search)
-        {
-            using (StreamReader sr = new StreamReader(Path.Combine(search, mlistBox.SelectedItem.ToString()), System.Text.Encoding.ASCII))
-            {
-
-
+        public void createWorkPanel(ListBox mlistBox, string search)
+        {  
                 TabPage tp = new TabPage();
-                tp.Name = name;
-                tp.Text = name;
+                tp.Name = mlistBox.SelectedItem.ToString();
+                tp.Text = mlistBox.SelectedItem.ToString();
                 tp.Width = tabControl1.Width - 10;
                 tp.Height = tabControl1.Height - 10;
 
                 RichTextBox RTB = new RichTextBox();
-                RTB.Name = searchMain+"\\"+name;
-                
+                RTB.Name = (Path.Combine(search, mlistBox.SelectedItem.ToString()));
+
                 RTB.Dock = DockStyle.Fill;
-                RTB.Text = sr.ReadToEnd();
+                try
+                {
+                    RTB.LoadFile(Path.Combine(search, mlistBox.SelectedItem.ToString()), RichTextBoxStreamType.RichText);
+                }
+                catch (Exception ert) { }
+                // RTB.Text = sr.ReadToEnd();
 
                 tp.Controls.Add(RTB);
                 tabControl2.TabPages.Add(tp);
-            }
+            
 
         }
 
@@ -93,7 +123,7 @@ namespace ConstructMetod
             Stream myStream = null;
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             openFileDialog1.InitialDirectory = @"a:\";
-            openFileDialog1.Filter = "txt files (*.txt)|*.txt|Allfiles(*.*) | *.* ";
+            openFileDialog1.Filter = "txt files (*.txt)|*.txt|RichText Files (*.rtf)|*.rtf|Allfiles(*.*) | *.* ";
             openFileDialog1.FilterIndex = 1;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -180,16 +210,18 @@ namespace ConstructMetod
             //добавление в строку пути название папки   
 
             if (listBox1.SelectedItem != null)
-            {
+            { //проверка на расширение выбранного объекта
                 if (Path.GetExtension(Path.Combine(searchMain, listBox1.SelectedItem.ToString())) == "")
                 {
+                  
                     searchMain = Path.Combine(searchMain + "\\" + listBox1.SelectedItem.ToString());
                     loadDir(searchMain, listBox1);
                 }
                 else
                 {
-                   
-                    bool controlName = false;
+                  //  Console.WriteLine(Path.GetExtension(Path.Combine(searchMain, listBox1.SelectedItem.ToString())));
+                    bool controlName = false; //хранит данные о том нашлось ли такое же имя?
+                    //цикл проверки вкладки с таким же именем как и с открываемым файлом
                     for (int i = 0; i < tabControl2.TabPages.Count; i++)
                     {       
                         if (tabControl2.TabPages[i].Name == listBox1.SelectedItem.ToString())
@@ -201,7 +233,7 @@ namespace ConstructMetod
                     }
                     if (controlName == false)
                     {
-                        createWorkPanel(listBox1, listBox1.SelectedItem.ToString(), searchMain);
+                        createWorkPanel(listBox1, searchMain);
                     }
                 }
             }
@@ -209,7 +241,7 @@ namespace ConstructMetod
 
         private void создатьПапкуToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string folderName = FileNameDialog();
+            string folderName = FileNameDialog(1);
             DirectoryInfo directoryInfo = new DirectoryInfo(searchMain + "\\" + folderName);
             if (!directoryInfo.Exists)
             {
@@ -225,15 +257,15 @@ namespace ConstructMetod
         private void создатьФайлToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            string fileName = FileNameDialog();
-            FileInfo fnf = new FileInfo(searchMain + "\\" + fileName + ".txt");
+            string fileName = FileNameDialog(2);
+            FileInfo fnf = new FileInfo(searchMain + "\\" + fileName);
             if (!fnf.Exists)
             {
                 if (fileName != "")
                 {
-                    StreamWriter a = new StreamWriter(File.Create(searchMain + "\\" + fileName + ".txt"));
+                    StreamWriter a = new StreamWriter(File.Create(searchMain + "\\" + fileName));
                     // createWorkPanel(listBox1,namen, searchMain);
-                    Console.WriteLine(searchMain + "\\" + fileName + ".txt");
+                    Console.WriteLine(searchMain + "\\" + fileName);
                     a.Close();
                 }
             }
@@ -243,21 +275,27 @@ namespace ConstructMetod
 
         private void удалитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileInfo fileDelete = new FileInfo(Path.Combine(searchMain, listBox1.SelectedItem.ToString()));
-            DirectoryInfo dirDelete = new DirectoryInfo(Path.Combine(searchMain, listBox1.SelectedItem.ToString()));
-            if (Path.GetExtension(Path.Combine(searchMain, listBox1.SelectedItem.ToString())) == "")
+            try
             {
-                if (dirDelete.Exists)
+                FileInfo fileDelete = new FileInfo(Path.Combine(searchMain, listBox1.SelectedItem.ToString()));
+                DirectoryInfo dirDelete = new DirectoryInfo(Path.Combine(searchMain, listBox1.SelectedItem.ToString()));
+                if (Path.GetExtension(Path.Combine(searchMain, listBox1.SelectedItem.ToString())) == "")
                 {
-                    dirDelete.Delete(true);
+                    if (dirDelete.Exists)
+                    {
+                        dirDelete.Delete(true);
+                    }
+                }
+                if (Path.GetExtension(Path.Combine(searchMain, listBox1.SelectedItem.ToString())) != "")
+                {
+                    if (fileDelete.Exists)
+                    {
+                        File.Delete(Path.Combine(searchMain, listBox1.SelectedItem.ToString()));
+                    }
                 }
             }
-            if (Path.GetExtension(Path.Combine(searchMain, listBox1.SelectedItem.ToString())) != "")
-            {
-                if (fileDelete.Exists)
-                {
-                    File.Delete(Path.Combine(searchMain, listBox1.SelectedItem.ToString()));
-                }
+            catch(Exception noneElement) {
+
             }
             loadDir(searchMain, listBox1);
 
