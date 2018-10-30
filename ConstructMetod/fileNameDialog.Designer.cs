@@ -131,6 +131,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Dialog panel";
+            this.Load += new System.EventHandler(this.fileNameDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

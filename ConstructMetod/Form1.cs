@@ -2,6 +2,8 @@
 using System.IO;
 using System.Windows.Forms;
 
+using System.Drawing.Text;
+
 
 namespace ConstructMetod
 {
@@ -9,16 +11,43 @@ namespace ConstructMetod
 
 
     {
-        string searchMain = "ConstructMetod";
-        int iPage = -1;
-        
+
+        string searchMain = "ConstructMetod"; // путь чтения и загрузки файлов
+        protected string homeSearch = "ConstructMetod";
+       protected int iPage = -1; //номер вкладки к которой обращаемся
+        InstalledFontCollection font;//для коллекции шрифтов предостовляемые системой
+
+
+
 
         public Form1()
         {
             InitializeComponent();
             listBox1.ContextMenuStrip = contextMenuStrip1;
             tabControl2.ContextMenuStrip = contextMenuStrip2;
-            
+            System.Drawing.Font font2 = new System.Drawing.Font("Times New Roman", 12);//начальный шрифт в диалоге шрифтов
+            fontDialog1.Font = font2;
+            fontAndSizePapam();
+            fontBox.Text = fontDialog1.Font.Name.ToString();
+            sizeFontBox.Text = fontDialog1.Font.Size.ToString();
+           
+        }
+
+        public void fontAndSizePapam() {
+            this.font = new InstalledFontCollection();
+            int count = font.Families.Length;
+
+            //Заполняем fontBox именами шрифтов
+            for (int j = 0; j < count; ++j)
+            {
+                fontBox.Items.Add(font.Families[j].Name);
+            }
+            //размеры шрифтов
+            for (int i = 0; i < 100; i++)
+            {
+                sizeFontBox.Items.Add(i);
+            }
+
         }
 
         public String FileNameDialog(int numberOperation)
@@ -75,12 +104,18 @@ namespace ConstructMetod
                 DirectoryInfo dir = new DirectoryInfo(path);
                 DirectoryInfo[] dirs = dir.GetDirectories();
                 foreach (DirectoryInfo crrDir in dirs)
-                { onelistBox1.Items.Add(crrDir); }
+                {
+                    onelistBox1.Items.Add(crrDir);
+                }
                 FileInfo[] files = dir.GetFiles();
                 foreach (FileInfo crrfile in files)
-                { onelistBox1.Items.Add(crrfile); }
+                {
+                    onelistBox1.Items.Add(crrfile);
+                }
             }
-            catch (Exception ms) { }
+            catch (Exception ms) {
+               
+            }
         }
 
         public void createWorkPanel(ListBox mlistBox, string search)
@@ -93,6 +128,7 @@ namespace ConstructMetod
 
                 RichTextBox RTB = new RichTextBox();
                 RTB.Name = (Path.Combine(search, mlistBox.SelectedItem.ToString()));
+            
 
                 RTB.Dock = DockStyle.Fill;
                 try
@@ -104,6 +140,7 @@ namespace ConstructMetod
 
                 tp.Controls.Add(RTB);
                 tabControl2.TabPages.Add(tp);
+            iPage = tabControl2.SelectedIndex;
             
 
         }
@@ -159,7 +196,9 @@ namespace ConstructMetod
         }
 
         private void listBox1_MouseDown(object sender, MouseEventArgs e)
+
         {
+       
             if (e.Button == MouseButtons.Right)
             {
              
@@ -199,6 +238,7 @@ namespace ConstructMetod
             catch (IndexOutOfRangeException index)
             {
                 loadDir(searchMain = "ConstructMetod", listBox1);
+             
             }
 
             loadDir(searchMain, listBox1);
@@ -206,7 +246,7 @@ namespace ConstructMetod
 
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-         
+
             //добавление в строку пути название папки   
 
             if (listBox1.SelectedItem != null)
@@ -221,6 +261,7 @@ namespace ConstructMetod
                 {
                   //  Console.WriteLine(Path.GetExtension(Path.Combine(searchMain, listBox1.SelectedItem.ToString())));
                     bool controlName = false; //хранит данные о том нашлось ли такое же имя?
+                  
                     //цикл проверки вкладки с таким же именем как и с открываемым файлом
                     for (int i = 0; i < tabControl2.TabPages.Count; i++)
                     {       
@@ -228,6 +269,7 @@ namespace ConstructMetod
                         {
                             controlName = !controlName;
                             tabControl2.SelectedIndex=i;
+                            iPage = i;
                             break;
                         }
                     }
@@ -314,7 +356,12 @@ namespace ConstructMetod
 
         private void Закрыть_ВкладкуToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            tabControl2.TabPages.Remove(tabControl2.TabPages[iPage]);
+            try
+            {
+                tabControl2.TabPages.Remove(tabControl2.TabPages[iPage]);
+            }
+            catch (ArgumentOutOfRangeException ex) {  }
+            
         }
 
         private void Сохранить_ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -322,9 +369,75 @@ namespace ConstructMetod
             var rull_RTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
             Console.WriteLine(searchMain + "\\" + rull_RTB.Name);
             rull_RTB.SaveFile(rull_RTB.Name);
+        }
+
+        private void AlignCenter_Click(object sender, EventArgs e)
+            
+        {
+            iPage = tabControl2.SelectedIndex;
+            var alignRTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
+            alignRTB.SelectionAlignment = HorizontalAlignment.Center;
+        }
+
+        private void alignRight_Click(object sender, EventArgs e)
+        {
+            iPage = tabControl2.SelectedIndex;
+            var alignRTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
+            alignRTB.SelectionAlignment = HorizontalAlignment.Right;
+
+        }
+
+        private void alignLeft_Click(object sender, EventArgs e)
+        {
+            iPage = tabControl2.SelectedIndex;
+            var alignRTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
+            alignRTB.SelectionAlignment = HorizontalAlignment.Left;
+        }
+
+        private void homeButton_Click(object sender, EventArgs e)
+        {
+            loadDir("ConstructMetod", listBox1);
+            searchMain= "ConstructMetod";     
+        }
+
+        private void italicButton_Click(object sender, EventArgs e)
+            
+        {
+           
+        }
+
+      
+
+        private void fontBox_KeyUp(object sender, KeyEventArgs e)
+        {
+         
+        }
+
+        private void fontDialogButton_Click(object sender, EventArgs e)
+        {
+            fontDialog1.ShowColor = true;
+            fontDialog1.ShowDialog();
+        }
+
+       
 
 
+     
 
+        private void fontBox_DropDownClosed(object sender, EventArgs e)
+        {
+            
+            
+        }
+
+      
+
+        private void fontBox_Paint(object sender, PaintEventArgs e)
+        {
+            int index = fontBox.FindString(fontBox.Text);
+            int sizeFont = int.Parse(sizeFontBox.Text);
+            System.Drawing.Font font3 = new System.Drawing.Font(fontBox.Text, sizeFont);
+            fontDialog1.Font = font3;
         }
     }
 }

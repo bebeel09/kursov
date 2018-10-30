@@ -33,5 +33,10 @@ namespace ConstructMetod
                 button1.Enabled = false;
             }
         }
+
+        private void fileNameDialog_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
