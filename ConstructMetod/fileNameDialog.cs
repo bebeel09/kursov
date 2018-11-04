@@ -16,14 +16,17 @@ namespace ConstructMetod
         {
             InitializeComponent();
             expansion.SelectedIndex = 0;
+            label2.Visible = true;
         }
 
-        
+
 
         private void fileOrFolder_KeyUp(object sender, KeyEventArgs e)
         {
+            e.Handled = true;
             if (fileOrFolder.Text != "")
             {
+
                 label2.Visible = false;
                 button1.Enabled = true;
             }
@@ -34,9 +37,13 @@ namespace ConstructMetod
             }
         }
 
-        private void fileNameDialog_Load(object sender, EventArgs e)
+        private void fileOrFolder_KeyPress(object sender, KeyPressEventArgs e)
         {
-
+            if (e.KeyChar=='[' | e.KeyChar == ']'| e.KeyChar == '{'| e.KeyChar == '}'| e.KeyChar == '.'| e.KeyChar == '\\'| e.KeyChar == '/'| e.KeyChar == '|')
+            {
+                toolTip1.Show("Запрещён ввод символов '[]{}/|\\.'",fileOrFolder);
+                e.Handled = true;
+            }    
         }
     }
 }

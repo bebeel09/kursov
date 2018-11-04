@@ -41,9 +41,7 @@
             this.closeTab = new System.Windows.Forms.ToolStripButton();
             this.newFile = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.italicButton = new System.Windows.Forms.ToolStripButton();
             this.fontDialogButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.fontBox = new System.Windows.Forms.ToolStripComboBox();
             this.sizeFontBox = new System.Windows.Forms.ToolStripComboBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -70,6 +68,7 @@
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.Закрыть_ВкладкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Сохранить_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.открытьКорневуюПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -96,9 +95,7 @@
             this.closeTab,
             this.newFile,
             this.toolStripSeparator3,
-            this.italicButton,
             this.fontDialogButton,
-            this.toolStripButton3,
             this.fontBox,
             this.sizeFontBox});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
@@ -195,16 +192,6 @@
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 23);
             // 
-            // italicButton
-            // 
-            this.italicButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.italicButton.Image = ((System.Drawing.Image)(resources.GetObject("italicButton.Image")));
-            this.italicButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.italicButton.Name = "italicButton";
-            this.italicButton.Size = new System.Drawing.Size(23, 20);
-            this.italicButton.Text = "toolStripButton1";
-            this.italicButton.Click += new System.EventHandler(this.italicButton_Click);
-            // 
             // fontDialogButton
             // 
             this.fontDialogButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -215,25 +202,19 @@
             this.fontDialogButton.Text = "toolStripButton2";
             this.fontDialogButton.Click += new System.EventHandler(this.fontDialogButton_Click);
             // 
-            // toolStripButton3
-            // 
-            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
-            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(23, 20);
-            this.toolStripButton3.Text = "toolStripButton3";
-            // 
             // fontBox
             // 
             this.fontBox.Name = "fontBox";
             this.fontBox.Size = new System.Drawing.Size(150, 23);
-            this.fontBox.Paint += new System.Windows.Forms.PaintEventHandler(this.fontBox_Paint);
+            this.fontBox.SelectedIndexChanged += new System.EventHandler(this.fontBox_SelectedIndexChanged);
+            this.fontBox.TextUpdate += new System.EventHandler(this.fontBox_TextUpdate);
             // 
             // sizeFontBox
             // 
             this.sizeFontBox.Name = "sizeFontBox";
             this.sizeFontBox.Size = new System.Drawing.Size(75, 23);
+            this.sizeFontBox.SelectedIndexChanged += new System.EventHandler(this.sizeFontBox_SelectedIndexChanged);
+            this.sizeFontBox.TextUpdate += new System.EventHandler(this.sizeFontBox_TextUpdate);
             // 
             // menuStrip1
             // 
@@ -250,6 +231,7 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.открытьToolStripMenuItem,
+            this.открытьКорневуюПапкуToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.ShowShortcutKeys = false;
@@ -419,6 +401,13 @@
             this.Сохранить_ToolStripMenuItem.Text = "Сохранить";
             this.Сохранить_ToolStripMenuItem.Click += new System.EventHandler(this.Сохранить_ToolStripMenuItem_Click);
             // 
+            // открытьКорневуюПапкуToolStripMenuItem
+            // 
+            this.открытьКорневуюПапкуToolStripMenuItem.Name = "открытьКорневуюПапкуToolStripMenuItem";
+            this.открытьКорневуюПапкуToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.открытьКорневуюПапкуToolStripMenuItem.Text = "Открыть корневую папку";
+            this.открытьКорневуюПапкуToolStripMenuItem.Click += new System.EventHandler(this.открытьКорневуюПапкуToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -488,11 +477,10 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton newFile;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripButton italicButton;
         private System.Windows.Forms.ToolStripButton fontDialogButton;
-        private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.ToolStripComboBox fontBox;
         private System.Windows.Forms.ToolStripComboBox sizeFontBox;
+        private System.Windows.Forms.ToolStripMenuItem открытьКорневуюПапкуToolStripMenuItem;
     }
 }
 

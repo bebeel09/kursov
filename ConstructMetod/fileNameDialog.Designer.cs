@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.textPresent = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -35,6 +36,7 @@
             this.fileOrFolder = new System.Windows.Forms.TextBox();
             this.formatPreaent = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // textPresent
@@ -90,6 +92,8 @@
             this.fileOrFolder.Name = "fileOrFolder";
             this.fileOrFolder.Size = new System.Drawing.Size(309, 29);
             this.fileOrFolder.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.fileOrFolder, "Запрещён ввод символов \'[ ] { } / | \\ . \'");
+            this.fileOrFolder.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.fileOrFolder_KeyPress);
             this.fileOrFolder.KeyUp += new System.Windows.Forms.KeyEventHandler(this.fileOrFolder_KeyUp);
             // 
             // formatPreaent
@@ -115,6 +119,10 @@
             this.label2.Text = "Не все поля были заполнены!";
             this.label2.Visible = false;
             // 
+            // toolTip1
+            // 
+            this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
+            // 
             // fileNameDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -131,7 +139,6 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Dialog panel";
-            this.Load += new System.EventHandler(this.fileNameDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -145,5 +152,6 @@
         public System.Windows.Forms.ComboBox expansion;
         public System.Windows.Forms.Label formatPreaent;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

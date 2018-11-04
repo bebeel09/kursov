@@ -9,15 +9,11 @@ namespace ConstructMetod
 {
     public partial class Form1 : Form
 
-
     {
-
         string searchMain = "ConstructMetod"; // путь чтения и загрузки файлов
         protected string homeSearch = "ConstructMetod";
-       protected int iPage = -1; //номер вкладки к которой обращаемся
+        protected int iPage = -1; //номер вкладки к которой обращаемся
         InstalledFontCollection font;//для коллекции шрифтов предостовляемые системой
-
-
 
 
         public Form1()
@@ -30,10 +26,10 @@ namespace ConstructMetod
             fontAndSizePapam();
             fontBox.Text = fontDialog1.Font.Name.ToString();
             sizeFontBox.Text = fontDialog1.Font.Size.ToString();
-           
         }
 
-        public void fontAndSizePapam() {
+        public void fontAndSizePapam()
+        {
             this.font = new InstalledFontCollection();
             int count = font.Families.Length;
 
@@ -43,7 +39,7 @@ namespace ConstructMetod
                 fontBox.Items.Add(font.Families[j].Name);
             }
             //размеры шрифтов
-            for (int i = 0; i < 100; i++)
+            for (int i = 1; i < 100; i++)
             {
                 sizeFontBox.Items.Add(i);
             }
@@ -57,7 +53,7 @@ namespace ConstructMetod
             int kostil = 0;
             DialogResult dr = new DialogResult();
             fileNameDialog frm2 = new fileNameDialog();
-            switch(numberOperation)
+            switch (numberOperation)
             {
                 case 1: // операция папки
                     frm2.textPresent.Text = "Введите название папки:";
@@ -78,12 +74,14 @@ namespace ConstructMetod
 
             if (dr == DialogResult.OK)
             {
-                if (kostil == 1) {
-                   
+                if (kostil == 1)
+                {
+
                     name = frm2.fileOrFolder.Text.ToString();
-                    Console.WriteLine(name+"2");
+                    Console.WriteLine(name + "2");
                 }
-                else if (kostil==2){
+                else if (kostil == 2)
+                {
                     name = frm2.fileOrFolder.Text.ToString() + tochka.ToString() + frm2.expansion.Text.ToString();
                     Console.WriteLine(name);
                 }
@@ -92,8 +90,24 @@ namespace ConstructMetod
             {
                 frm2.Close();
             }
-            
+
             return name;
+        }
+
+        public bool correctName(string name)
+        {
+            bool transact = false;
+            string fileName = name;
+            foreach (int charT in fileName)
+            {
+                if (charT == '[' || charT == ']' || charT == '{' || charT == '}' || charT == '.' || charT == '\\' || charT == '/' || charT == '|')
+                {
+                    MessageBox.Show("Присутствуют недопустимые символы'[ ]{ }. \\/|'. Операция была отменена!");
+                    transact = false;
+                    break;
+                }
+            }
+            return transact;
         }
 
         public void loadDir(string path, ListBox onelistBox1)
@@ -113,36 +127,55 @@ namespace ConstructMetod
                     onelistBox1.Items.Add(crrfile);
                 }
             }
-            catch (Exception ms) {
-               
+            catch (Exception ms)
+            {
+
             }
         }
 
         public void createWorkPanel(ListBox mlistBox, string search)
-        {  
-                TabPage tp = new TabPage();
-                tp.Name = mlistBox.SelectedItem.ToString();
-                tp.Text = mlistBox.SelectedItem.ToString();
-                tp.Width = tabControl1.Width - 10;
-                tp.Height = tabControl1.Height - 10;
+        {
+            TabPage tp = new TabPage();
+            tp.Name = mlistBox.SelectedItem.ToString();
+            tp.Text = mlistBox.SelectedItem.ToString();
+            tp.Width = tabControl1.Width - 10;
+            tp.Height = tabControl1.Height - 10;
 
-                RichTextBox RTB = new RichTextBox();
-                RTB.Name = (Path.Combine(search, mlistBox.SelectedItem.ToString()));
-            
+            RichTextBox RTB = new RichTextBox();
+            RTB.Name = (Path.Combine(search, mlistBox.SelectedItem.ToString()));
+            RTB.Font = new System.Drawing.Font("Times New Roman", 24);
+            RTB.Click += new System.EventHandler(this.RTB_Click);
 
-                RTB.Dock = DockStyle.Fill;
-                try
-                {
-                    RTB.LoadFile(Path.Combine(search, mlistBox.SelectedItem.ToString()), RichTextBoxStreamType.RichText);
-                }
-                catch (Exception ert) { }
-                // RTB.Text = sr.ReadToEnd();
 
-                tp.Controls.Add(RTB);
-                tabControl2.TabPages.Add(tp);
+
+            RTB.Dock = DockStyle.Fill;
+            try
+            {
+                RTB.LoadFile(Path.Combine(search, mlistBox.SelectedItem.ToString()), RichTextBoxStreamType.RichText);
+            }
+            catch (Exception ert) { }
+            // RTB.Text = sr.ReadToEnd();
+
+            tp.Controls.Add(RTB);
+            tabControl2.TabPages.Add(tp);
             iPage = tabControl2.SelectedIndex;
-            
 
+
+        }
+
+        private void RTB_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                RichTextBox RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
+                fontBox.Text = RTB.SelectionFont.Name;
+                sizeFontBox.Text = RTB.SelectionFont.Size.ToString();
+            }
+            catch (NullReferenceException error)
+            {
+                fontBox.Text = "";
+                sizeFontBox.Text = "";
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -198,10 +231,10 @@ namespace ConstructMetod
         private void listBox1_MouseDown(object sender, MouseEventArgs e)
 
         {
-       
+
             if (e.Button == MouseButtons.Right)
             {
-             
+
                 int index = listBox1.IndexFromPoint(e.X, e.Y);
                 if (index != -1)
                 {
@@ -238,7 +271,7 @@ namespace ConstructMetod
             catch (IndexOutOfRangeException index)
             {
                 loadDir(searchMain = "ConstructMetod", listBox1);
-             
+
             }
 
             loadDir(searchMain, listBox1);
@@ -253,22 +286,22 @@ namespace ConstructMetod
             { //проверка на расширение выбранного объекта
                 if (Path.GetExtension(Path.Combine(searchMain, listBox1.SelectedItem.ToString())) == "")
                 {
-                  
+
                     searchMain = Path.Combine(searchMain + "\\" + listBox1.SelectedItem.ToString());
                     loadDir(searchMain, listBox1);
                 }
                 else
                 {
-                  //  Console.WriteLine(Path.GetExtension(Path.Combine(searchMain, listBox1.SelectedItem.ToString())));
+                    //  Console.WriteLine(Path.GetExtension(Path.Combine(searchMain, listBox1.SelectedItem.ToString())));
                     bool controlName = false; //хранит данные о том нашлось ли такое же имя?
-                  
+
                     //цикл проверки вкладки с таким же именем как и с открываемым файлом
                     for (int i = 0; i < tabControl2.TabPages.Count; i++)
-                    {       
+                    {
                         if (tabControl2.TabPages[i].Name == listBox1.SelectedItem.ToString())
                         {
                             controlName = !controlName;
-                            tabControl2.SelectedIndex=i;
+                            tabControl2.SelectedIndex = i;
                             iPage = i;
                             break;
                         }
@@ -284,31 +317,38 @@ namespace ConstructMetod
         private void создатьПапкуToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string folderName = FileNameDialog(1);
-            DirectoryInfo directoryInfo = new DirectoryInfo(searchMain + "\\" + folderName);
-            if (!directoryInfo.Exists)
+            bool transact = correctName(folderName);
+            if (transact == true)
             {
-                if (folderName != "")
+                DirectoryInfo directoryInfo = new DirectoryInfo(searchMain + "\\" + folderName);
+                if (!directoryInfo.Exists)
                 {
-                    directoryInfo.Create();
+                    if (folderName != "")
+                    {
+                        directoryInfo.Create();
 
+                    }
+                    loadDir(searchMain, listBox1);
                 }
-                loadDir(searchMain, listBox1);
             }
+            loadDir(searchMain, listBox1);
         }
 
         private void создатьФайлToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             string fileName = FileNameDialog(2);
-            FileInfo fnf = new FileInfo(searchMain + "\\" + fileName);
-            if (!fnf.Exists)
+            bool transact = correctName(fileName);
+            if (transact == true)
             {
-                if (fileName != "")
+                FileInfo fnf = new FileInfo(searchMain + "\\" + fileName);
+                if (!fnf.Exists)
                 {
-                    StreamWriter a = new StreamWriter(File.Create(searchMain + "\\" + fileName));
-                    // createWorkPanel(listBox1,namen, searchMain);
-                    Console.WriteLine(searchMain + "\\" + fileName);
-                    a.Close();
+                    if (fileName != "")
+                    {
+                        StreamWriter a = new StreamWriter(File.Create(searchMain + "\\" + fileName));                      
+                        Console.WriteLine(searchMain + "\\" + fileName);
+                        a.Close();
+                    }
                 }
             }
 
@@ -336,7 +376,8 @@ namespace ConstructMetod
                     }
                 }
             }
-            catch(Exception noneElement) {
+            catch (Exception noneElement)
+            {
 
             }
             loadDir(searchMain, listBox1);
@@ -345,13 +386,13 @@ namespace ConstructMetod
 
         private void contextMenuStrip2_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-           System.Drawing.Point pt = tabControl2.PointToClient(Cursor.Position);
+            System.Drawing.Point pt = tabControl2.PointToClient(Cursor.Position);
             iPage = -1;
             for (int i = 0; i < tabControl2.TabCount; i++)
             {
                 if (tabControl2.GetTabRect(i).Contains(pt))
                     iPage = i;
-            }          
+            }
         }
 
         private void Закрыть_ВкладкуToolStripMenuItem_Click(object sender, EventArgs e)
@@ -360,84 +401,110 @@ namespace ConstructMetod
             {
                 tabControl2.TabPages.Remove(tabControl2.TabPages[iPage]);
             }
-            catch (ArgumentOutOfRangeException ex) {  }
-            
+            catch (ArgumentOutOfRangeException ex) { }
+
         }
 
         private void Сохранить_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var rull_RTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
+            RichTextBox rull_RTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
             Console.WriteLine(searchMain + "\\" + rull_RTB.Name);
             rull_RTB.SaveFile(rull_RTB.Name);
         }
 
         private void AlignCenter_Click(object sender, EventArgs e)
-            
         {
-            iPage = tabControl2.SelectedIndex;
-            var alignRTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
-            alignRTB.SelectionAlignment = HorizontalAlignment.Center;
+            if (tabControl2.TabPages.Count > 0)
+            {
+                iPage = tabControl2.SelectedIndex;
+                RichTextBox alignRTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
+                alignRTB.SelectionAlignment = HorizontalAlignment.Center;
+            }
         }
 
         private void alignRight_Click(object sender, EventArgs e)
         {
-            iPage = tabControl2.SelectedIndex;
-            var alignRTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
-            alignRTB.SelectionAlignment = HorizontalAlignment.Right;
-
+            if (tabControl2.TabPages.Count > 0)
+            {
+                iPage = tabControl2.SelectedIndex;
+                RichTextBox alignRTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
+                alignRTB.SelectionAlignment = HorizontalAlignment.Right;
+            }
         }
 
         private void alignLeft_Click(object sender, EventArgs e)
         {
-            iPage = tabControl2.SelectedIndex;
-            var alignRTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
-            alignRTB.SelectionAlignment = HorizontalAlignment.Left;
+            if (tabControl2.TabPages.Count > 0)
+            {
+                RichTextBox alignRTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
+                alignRTB.SelectionAlignment = HorizontalAlignment.Left;
+            }
         }
 
         private void homeButton_Click(object sender, EventArgs e)
         {
             loadDir("ConstructMetod", listBox1);
-            searchMain= "ConstructMetod";     
-        }
-
-        private void italicButton_Click(object sender, EventArgs e)
-            
-        {
-           
-        }
-
-      
-
-        private void fontBox_KeyUp(object sender, KeyEventArgs e)
-        {
-         
+            searchMain = "ConstructMetod";
         }
 
         private void fontDialogButton_Click(object sender, EventArgs e)
         {
             fontDialog1.ShowColor = true;
-            fontDialog1.ShowDialog();
+            if (fontDialog1.ShowDialog() == DialogResult.OK)
+            {
+                fontBox.Text = fontDialog1.Font.Name;
+                sizeFontBox.Text = fontDialog1.Font.SizeInPoints.ToString();
+                if (tabControl2.TabPages.Count > 0)
+                {
+                    RichTextBox rull_RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
+                    rull_RTB.SelectionFont = fontDialog1.Font;
+                }
+            }
         }
 
-       
-
-
-     
-
-        private void fontBox_DropDownClosed(object sender, EventArgs e)
+        private void fontBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
-            
+            try
+            {
+                int sizeFont = int.Parse(sizeFontBox.Text);
+                System.Drawing.Font font3 = new System.Drawing.Font(fontBox.Text, sizeFont);
+                fontDialog1.Font = font3;
+                RichTextBox RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
+                RTB.SelectionFont = fontDialog1.Font;
+
+            }
+            catch (Exception args) { }
         }
 
-      
-
-        private void fontBox_Paint(object sender, PaintEventArgs e)
+        private void fontBox_TextUpdate(object sender, EventArgs e)
         {
-            int index = fontBox.FindString(fontBox.Text);
-            int sizeFont = int.Parse(sizeFontBox.Text);
-            System.Drawing.Font font3 = new System.Drawing.Font(fontBox.Text, sizeFont);
-            fontDialog1.Font = font3;
+            fontBox.DroppedDown = true;
+            fontBox_SelectedIndexChanged(fontBox, e);
+        }
+
+        private void sizeFontBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                int sizeFont = int.Parse(sizeFontBox.Text);
+                System.Drawing.Font font3 = new System.Drawing.Font(fontBox.Text, sizeFont);
+                fontDialog1.Font = font3;
+                RichTextBox RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
+                RTB.SelectionFont = fontDialog1.Font;
+            }
+            catch (Exception asdfg) { }
+        }
+
+        private void sizeFontBox_TextUpdate(object sender, EventArgs e)
+        {
+            sizeFontBox_SelectedIndexChanged(sizeFontBox, e);
+        }
+
+        private void открытьКорневуюПапкуToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            System.Diagnostics.Process.Start("explorer", homeSearch);
+
         }
     }
 }
