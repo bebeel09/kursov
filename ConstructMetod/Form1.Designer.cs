@@ -47,6 +47,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.открытьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.открытьКорневуюПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.оРазработчикеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -68,7 +69,6 @@
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.Закрыть_ВкладкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Сохранить_ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.открытьКорневуюПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -241,14 +241,21 @@
             // открытьToolStripMenuItem
             // 
             this.открытьToolStripMenuItem.Name = "открытьToolStripMenuItem";
-            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.открытьToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.открытьToolStripMenuItem.Text = "&Открыть...";
             this.открытьToolStripMenuItem.Click += new System.EventHandler(this.открытьToolStripMenuItem_Click);
+            // 
+            // открытьКорневуюПапкуToolStripMenuItem
+            // 
+            this.открытьКорневуюПапкуToolStripMenuItem.Name = "открытьКорневуюПапкуToolStripMenuItem";
+            this.открытьКорневуюПапкуToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.открытьКорневуюПапкуToolStripMenuItem.Text = "Открыть корневую папку";
+            this.открытьКорневуюПапкуToolStripMenuItem.Click += new System.EventHandler(this.открытьКорневуюПапкуToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.exitToolStripMenuItem.Text = "&Выход";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -311,15 +318,14 @@
             // 
             this.listBox1.BackColor = System.Drawing.Color.Khaki;
             this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBox1.Font = new System.Drawing.Font("Times New Roman", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.listBox1.Font = new System.Drawing.Font("Times New Roman", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 15;
+            this.listBox1.ItemHeight = 17;
             this.listBox1.Location = new System.Drawing.Point(3, 3);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(252, 356);
             this.listBox1.TabIndex = 0;
-           
             this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
             this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
             // 
@@ -401,13 +407,6 @@
             this.Сохранить_ToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.Сохранить_ToolStripMenuItem.Text = "Сохранить";
             this.Сохранить_ToolStripMenuItem.Click += new System.EventHandler(this.Сохранить_ToolStripMenuItem_Click);
-            // 
-            // открытьКорневуюПапкуToolStripMenuItem
-            // 
-            this.открытьКорневуюПапкуToolStripMenuItem.Name = "открытьКорневуюПапкуToolStripMenuItem";
-            this.открытьКорневуюПапкуToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.открытьКорневуюПапкуToolStripMenuItem.Text = "Открыть корневую папку";
-            this.открытьКорневуюПапкуToolStripMenuItem.Click += new System.EventHandler(this.открытьКорневуюПапкуToolStripMenuItem_Click);
             // 
             // Form1
             // 

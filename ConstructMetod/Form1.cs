@@ -3,6 +3,10 @@ using System.IO;
 using System.Windows.Forms;
 
 using System.Drawing.Text;
+using System.Drawing;
+
+
+
 
 
 
@@ -15,11 +19,13 @@ namespace ConstructMetod
         protected string homeSearch = "ConstructMetod";
         protected int iPage = -1; //номер вкладки к которой обращаемся
         InstalledFontCollection font;//для коллекции шрифтов предостовляемые системой
+      
 
 
         public Form1()
         {
             InitializeComponent();
+              
             listBox1.ContextMenuStrip = contextMenuStrip1;
             tabControl2.ContextMenuStrip = contextMenuStrip2;
             System.Drawing.Font font2 = new System.Drawing.Font("Times New Roman", 12);//начальный шрифт в диалоге шрифтов
@@ -27,6 +33,7 @@ namespace ConstructMetod
             fontAndSizePapam();
             fontBox.Text = fontDialog1.Font.Name.ToString();
             sizeFontBox.Text = fontDialog1.Font.Size.ToString();
+            
         }
 
         public void fontAndSizePapam()
@@ -124,6 +131,7 @@ namespace ConstructMetod
             {
 
                 onelistBox1.Items.Add(crrDir);
+             
 
             }
             FileInfo[] files = dir.GetFiles();
@@ -514,5 +522,6 @@ namespace ConstructMetod
 
         }
 
+      
     }
 }
