@@ -339,8 +339,6 @@ namespace ConstructMetod
         private void создатьФайлToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = FileNameDialog(2);
-
-
             try
             {
                 FileInfo fnf = new FileInfo(searchMain + "\\" + fileName);
@@ -516,9 +514,5 @@ namespace ConstructMetod
 
         }
 
-        private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
-        {
-
-        }
     }
 }
