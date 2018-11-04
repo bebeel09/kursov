@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Drawing.Text;
 
 
+
 namespace ConstructMetod
 {
     public partial class Form1 : Form
@@ -96,41 +97,42 @@ namespace ConstructMetod
 
         public bool correctName(string name)
         {
-            bool transact = false;
-            string fileName = name;
-            foreach (int charT in fileName)
+            bool transact = true;
+            int len_fileName = name.Length;
+            char charT;
+            for (int i = 0; i < len_fileName; i++)
             {
+                charT = name[i];
                 if (charT == '[' || charT == ']' || charT == '{' || charT == '}' || charT == '.' || charT == '\\' || charT == '/' || charT == '|')
                 {
                     MessageBox.Show("Присутствуют недопустимые символы'[ ]{ }. \\/|'. Операция была отменена!");
                     transact = false;
                     break;
                 }
+                Console.WriteLine(charT);
             }
             return transact;
         }
 
         public void loadDir(string path, ListBox onelistBox1)
         {
-            try
-            {
-                onelistBox1.Items.Clear();
-                DirectoryInfo dir = new DirectoryInfo(path);
-                DirectoryInfo[] dirs = dir.GetDirectories();
-                foreach (DirectoryInfo crrDir in dirs)
-                {
-                    onelistBox1.Items.Add(crrDir);
-                }
-                FileInfo[] files = dir.GetFiles();
-                foreach (FileInfo crrfile in files)
-                {
-                    onelistBox1.Items.Add(crrfile);
-                }
-            }
-            catch (Exception ms)
+
+            onelistBox1.Items.Clear();
+            DirectoryInfo dir = new DirectoryInfo(path);
+            DirectoryInfo[] dirs = dir.GetDirectories();
+            foreach (DirectoryInfo crrDir in dirs)
             {
 
+                onelistBox1.Items.Add(crrDir);
+
             }
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo crrfile in files)
+            {
+                onelistBox1.Items.Add(crrfile);
+            }
+
+
         }
 
         public void createWorkPanel(ListBox mlistBox, string search)
@@ -337,20 +339,27 @@ namespace ConstructMetod
         private void создатьФайлToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = FileNameDialog(2);
-            bool transact = correctName(fileName);
-            if (transact == true)
+
+
+            try
             {
                 FileInfo fnf = new FileInfo(searchMain + "\\" + fileName);
                 if (!fnf.Exists)
                 {
                     if (fileName != "")
                     {
-                        StreamWriter a = new StreamWriter(File.Create(searchMain + "\\" + fileName));                      
-                        Console.WriteLine(searchMain + "\\" + fileName);
+                        StreamWriter a = new StreamWriter(File.Create(searchMain + "\\" + fileName));
+
                         a.Close();
                     }
                 }
             }
+            catch (ArgumentException)
+            {
+                MessageBox.Show("Присутствуют недопустимые символы'[ ]{ }. \\/|'. Операция была отменена!");
+
+            }
+
 
             loadDir(searchMain, listBox1);
         }
@@ -504,6 +513,11 @@ namespace ConstructMetod
         {
 
             System.Diagnostics.Process.Start("explorer", homeSearch);
+
+        }
+
+        private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
+        {
 
         }
     }
