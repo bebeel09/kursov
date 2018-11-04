@@ -199,7 +199,7 @@
             this.fontDialogButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.fontDialogButton.Name = "fontDialogButton";
             this.fontDialogButton.Size = new System.Drawing.Size(23, 20);
-            this.fontDialogButton.Text = "toolStripButton2";
+            this.fontDialogButton.Text = "открыть окно шрифтов";
             this.fontDialogButton.Click += new System.EventHandler(this.fontDialogButton_Click);
             // 
             // fontBox
