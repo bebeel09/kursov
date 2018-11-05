@@ -19,13 +19,13 @@ namespace ConstructMetod
         protected string homeSearch = "ConstructMetod";
         protected int iPage = -1; //номер вкладки к которой обращаемся
         InstalledFontCollection font;//для коллекции шрифтов предостовляемые системой
-      
+
 
 
         public Form1()
         {
             InitializeComponent();
-              
+
             listBox1.ContextMenuStrip = contextMenuStrip1;
             tabControl2.ContextMenuStrip = contextMenuStrip2;
             System.Drawing.Font font2 = new System.Drawing.Font("Times New Roman", 12);//начальный шрифт в диалоге шрифтов
@@ -33,7 +33,7 @@ namespace ConstructMetod
             fontAndSizePapam();
             fontBox.Text = fontDialog1.Font.Name.ToString();
             sizeFontBox.Text = fontDialog1.Font.Size.ToString();
-            
+
         }
 
         public void fontAndSizePapam()
@@ -105,18 +105,21 @@ namespace ConstructMetod
         public bool correctName(string name)
         {
             bool transact = true;
-            int len_fileName = name.Length;
+            string correctName = name.Trim();
+            int len_fileName = correctName.Length;
             char charT;
+
             for (int i = 0; i < len_fileName; i++)
             {
                 charT = name[i];
-                if (charT == '[' || charT == ']' || charT == '{' || charT == '}' || charT == '.' || charT == '\\' || charT == '/' || charT == '|')
+
+                if (charT == '[' | charT == ']' | charT == '{' | charT == '}' | charT == '.' | charT == '\\' | charT == '/' | charT == '|')
                 {
+
                     MessageBox.Show("Присутствуют недопустимые символы'[ ]{ }. \\/|'. Операция была отменена!");
                     transact = false;
                     break;
                 }
-                Console.WriteLine(charT);
             }
             return transact;
         }
@@ -131,7 +134,7 @@ namespace ConstructMetod
             {
 
                 onelistBox1.Items.Add(crrDir);
-             
+
 
             }
             FileInfo[] files = dir.GetFiles();
@@ -145,27 +148,31 @@ namespace ConstructMetod
 
         public void createWorkPanel(ListBox mlistBox, string search)
         {
+            //new Tab Page создаём вкладку
             TabPage tp = new TabPage();
             tp.Name = mlistBox.SelectedItem.ToString();
             tp.Text = mlistBox.SelectedItem.ToString();
             tp.Width = tabControl1.Width - 10;
             tp.Height = tabControl1.Height - 10;
 
+            //new RichTextBox окно для ввода текста в вкладке
             RichTextBox RTB = new RichTextBox();
             RTB.Name = (Path.Combine(search, mlistBox.SelectedItem.ToString()));
             RTB.Font = new System.Drawing.Font("Times New Roman", 24);
-            RTB.Click += new System.EventHandler(this.RTB_Click);
-
-
-
             RTB.Dock = DockStyle.Fill;
+            RTB.Click += new System.EventHandler(this.RTB_Click);
+            RTB.ContextMenuStrip = contextMenuStrip3;
+            RTB.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RTB_MouseDown);
+            RTB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RTB_KeyDown);
+
+
             try
             {
                 RTB.LoadFile(Path.Combine(search, mlistBox.SelectedItem.ToString()), RichTextBoxStreamType.RichText);
             }
             catch (Exception ert) { }
-            // RTB.Text = sr.ReadToEnd();
 
+            //добавляем компонент richTextBox в tabPage
             tp.Controls.Add(RTB);
             tabControl2.TabPages.Add(tp);
             iPage = tabControl2.SelectedIndex;
@@ -173,8 +180,34 @@ namespace ConstructMetod
 
         }
 
+        private void RTB_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.S)
+            {
+                сохранитьToolStripMenuItem_Click(sender, e);
+            }
+        }
+
+        private void RTB_MouseDown(object sender, MouseEventArgs e)
+        {
+
+            //if (e.Button == MouseButtons.Right)
+            //{
+
+            //    RichTextBox RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
+            //    System.Drawing.Point pt =RTB.PointToClient(Cursor.Position);
+
+            //    int index = RTB.GetCharIndexFromPosition(pt);
+            //    if (index != -1)
+            //    {
+
+            //    }
+            //}
+        }
+
         private void RTB_Click(object sender, EventArgs e)
         {
+
             try
             {
                 RichTextBox RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
@@ -241,10 +274,8 @@ namespace ConstructMetod
         private void listBox1_MouseDown(object sender, MouseEventArgs e)
 
         {
-
             if (e.Button == MouseButtons.Right)
             {
-
                 int index = listBox1.IndexFromPoint(e.X, e.Y);
                 if (index != -1)
                 {
@@ -336,9 +367,8 @@ namespace ConstructMetod
                     if (folderName != "")
                     {
                         directoryInfo.Create();
-
-                    }
-                    loadDir(searchMain, listBox1);
+                        statusLabel1.Text = $"Создана папка с именем: {folderName}";
+                    }                    
                 }
             }
             loadDir(searchMain, listBox1);
@@ -347,26 +377,27 @@ namespace ConstructMetod
         private void создатьФайлToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = FileNameDialog(2);
-            try
-            {
-                FileInfo fnf = new FileInfo(searchMain + "\\" + fileName);
-                if (!fnf.Exists)
-                {
-                    if (fileName != "")
-                    {
-                        StreamWriter a = new StreamWriter(File.Create(searchMain + "\\" + fileName));
+            /// входная строка имеет в себе ещё и расширение файла, и проверку не пройдёт
+            /// отсекаем часть с расширением фаила, и полученную строку передаём в метод проверки корректности
 
-                        a.Close();
+            if (fileName.Length != 0)
+            {
+                bool control = correctName(fileName.Substring(0, fileName.Length - 4));
+
+                if (control == true)
+                {
+                    FileInfo fnf = new FileInfo(searchMain + "\\" + fileName);
+                    if (!fnf.Exists)
+                    {
+                        if (fileName != "")
+                        {
+                            StreamWriter a = new StreamWriter(File.Create(searchMain + "\\" + fileName));
+                            a.Close();
+                            statusLabel1.Text = $"Создан файл с именем: {fileName}";
+                        }
                     }
                 }
             }
-            catch (ArgumentException)
-            {
-                MessageBox.Show("Присутствуют недопустимые символы'[ ]{ }. \\/|'. Операция была отменена!");
-
-            }
-
-
             loadDir(searchMain, listBox1);
         }
 
@@ -473,6 +504,7 @@ namespace ConstructMetod
                 {
                     RichTextBox rull_RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
                     rull_RTB.SelectionFont = fontDialog1.Font;
+                    rull_RTB.SelectionColor = fontDialog1.Color;
                 }
             }
         }
@@ -522,6 +554,53 @@ namespace ConstructMetod
 
         }
 
-      
+        private void вырезатьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RichTextBox RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
+            RTB.Cut();
+        }
+
+        private void копироватьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RichTextBox RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
+            RTB.Copy();
+            statusLabel1.Text = "Скопировано в буфер обмена";
+        }
+
+        private void вставитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RichTextBox RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
+            RTB.Paste();
+        }
+
+        private void задатьШрифтИРазмерToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            fontDialogButton_Click(sender, e);
+        }
+
+        private void поЛевомуКраюToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            alignLeft_Click(sender, e);
+        }
+
+        private void поПравомуКраюToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            alignRight_Click(sender, e);
+        }
+
+        private void поЦентруToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AlignCenter_Click(sender, e);
+        }
+
+        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RichTextBox rull_RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
+            rull_RTB.SaveFile(rull_RTB.Name);
+            statusLabel1.Text = $"Файл {rull_RTB.Name} успешно сохранён";
+        }
+
+
     }
 }
+
