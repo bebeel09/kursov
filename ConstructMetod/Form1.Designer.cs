@@ -51,6 +51,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.оРазработчикеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -83,7 +84,7 @@
             this.поЛевомуКраюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.поПравомуКраюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.поЦентруToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.сохранитьВсёToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -249,6 +250,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.открытьToolStripMenuItem,
             this.открытьКорневуюПапкуToolStripMenuItem,
+            this.сохранитьВсёToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.ShowShortcutKeys = false;
@@ -281,17 +283,23 @@
             this.оРазработчикеToolStripMenuItem.Name = "оРазработчикеToolStripMenuItem";
             this.оРазработчикеToolStripMenuItem.Size = new System.Drawing.Size(107, 20);
             this.оРазработчикеToolStripMenuItem.Text = "&О разработчике";
+            this.оРазработчикеToolStripMenuItem.Click += new System.EventHandler(this.оРазработчикеToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
             this.statusStrip1.BackColor = System.Drawing.Color.Khaki;
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 439);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 478);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(800, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // statusLabel1
+            // 
+            this.statusLabel1.Name = "statusLabel1";
+            this.statusLabel1.Size = new System.Drawing.Size(0, 17);
             // 
             // splitContainer1
             // 
@@ -308,7 +316,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl2);
             this.splitContainer1.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.splitContainer1.Size = new System.Drawing.Size(800, 388);
+            this.splitContainer1.Size = new System.Drawing.Size(800, 427);
             this.splitContainer1.SplitterDistance = 266;
             this.splitContainer1.TabIndex = 3;
             // 
@@ -319,7 +327,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(266, 388);
+            this.tabControl1.Size = new System.Drawing.Size(266, 427);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -328,7 +336,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(258, 362);
+            this.tabPage1.Size = new System.Drawing.Size(258, 401);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Файл меню";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -344,7 +352,7 @@
             this.listBox1.ItemHeight = 17;
             this.listBox1.Location = new System.Drawing.Point(3, 3);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(252, 356);
+            this.listBox1.Size = new System.Drawing.Size(252, 395);
             this.listBox1.TabIndex = 0;
             this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
             this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDown);
@@ -393,7 +401,7 @@
             this.tabControl2.Location = new System.Drawing.Point(0, 0);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(530, 388);
+            this.tabControl2.Size = new System.Drawing.Size(530, 427);
             this.tabControl2.TabIndex = 0;
             // 
             // openFileDialog1
@@ -533,16 +541,18 @@
             this.поЦентруToolStripMenuItem.Text = "По центру";
             this.поЦентруToolStripMenuItem.Click += new System.EventHandler(this.поЦентруToolStripMenuItem_Click);
             // 
-            // statusLabel1
+            // сохранитьВсёToolStripMenuItem
             // 
-            this.statusLabel1.Name = "statusLabel1";
-            this.statusLabel1.Size = new System.Drawing.Size(0, 17);
+            this.сохранитьВсёToolStripMenuItem.Name = "сохранитьВсёToolStripMenuItem";
+            this.сохранитьВсёToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.сохранитьВсёToolStripMenuItem.Text = "Сохранить всё...";
+            this.сохранитьВсёToolStripMenuItem.Click += new System.EventHandler(this.сохранитьВсёToolStripMenuItem_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 461);
+            this.ClientSize = new System.Drawing.Size(800, 500);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
@@ -551,7 +561,8 @@
             this.MinimumSize = new System.Drawing.Size(800, 500);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "Конструктор справочных систем v1.0";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -629,6 +640,7 @@
         private System.Windows.Forms.ToolStripMenuItem поПравомуКраюToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem поЦентруToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel1;
+        private System.Windows.Forms.ToolStripMenuItem сохранитьВсёToolStripMenuItem;
     }
 }
 

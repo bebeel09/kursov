@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ConstructMetod
@@ -19,8 +12,7 @@ namespace ConstructMetod
             label2.Visible = true;
         }
 
-
-
+        //Выводит сообщения пользвоателю о пустом значении поля
         private void fileOrFolder_KeyUp(object sender, KeyEventArgs e)
         {
             e.Handled = true;
@@ -37,6 +29,7 @@ namespace ConstructMetod
             }
         }
 
+        //запрет на ввод определённых симоволов
         private void fileOrFolder_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar=='[' | e.KeyChar == ']'| e.KeyChar == '{'| e.KeyChar == '}'| e.KeyChar == '.'| e.KeyChar == '\\'| e.KeyChar == '/'| e.KeyChar == '|')
@@ -46,9 +39,5 @@ namespace ConstructMetod
             }    
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

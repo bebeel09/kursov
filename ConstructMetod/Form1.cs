@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-
 using System.Drawing.Text;
-using System.Drawing;
+
 
 
 
@@ -15,10 +14,10 @@ namespace ConstructMetod
     public partial class Form1 : Form
 
     {
-        string searchMain = "ConstructMetod"; // путь чтения и загрузки файлов
-        protected string homeSearch = "ConstructMetod";
+        string searchMain = "Catalog"; // путь чтения и загрузки файлов
+        protected string homeSearch = "Catalog";
         protected int iPage = -1; //номер вкладки к которой обращаемся
-        InstalledFontCollection font;//для коллекции шрифтов предостовляемые системой
+        InstalledFontCollection font;//коллекция шрифтов предостовляемые системой
 
 
 
@@ -36,6 +35,7 @@ namespace ConstructMetod
 
         }
 
+        //метод передающий все шрифты установленные на ПК, а так же задёт размеры
         public void fontAndSizePapam()
         {
             this.font = new InstalledFontCollection();
@@ -54,6 +54,7 @@ namespace ConstructMetod
 
         }
 
+        //Метод для вызова окна в котором задаётся название папки или файла. Возврашает название
         public String FileNameDialog(int numberOperation)
         {
             string name = "";
@@ -102,6 +103,42 @@ namespace ConstructMetod
             return name;
         }
 
+        public bool SaveOrNoDialog(string nameFile)
+        {
+            bool resultReturn = false;          
+            SaveOrNo formSave = new SaveOrNo();
+            DialogResult result = new DialogResult();
+            if (nameFile.Length != 0)
+            {
+                string corName = onlyNameFile(nameFile);
+                formSave.label1.Text = $"Сохранить файл: {corName}";
+            }
+            result = formSave.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                resultReturn = true;
+            }
+
+            return resultReturn;
+        }
+
+        public string onlyNameFile(string searhName)
+        {
+            string only_NameFile = searhName;
+            int lastSlech = searhName.LastIndexOf('\\');
+
+            if (only_NameFile[only_NameFile.Length - 1] == '\\')
+            {
+                only_NameFile = only_NameFile.Remove(searchMain.Length - 1, 1);
+            }
+
+            only_NameFile = only_NameFile.Remove(0,lastSlech+1);
+
+            return only_NameFile;
+        }
+
+        //правильно ли задано название?
         public bool correctName(string name)
         {
             bool transact = true;
@@ -124,9 +161,9 @@ namespace ConstructMetod
             return transact;
         }
 
+        //загрузка директории со всеми файлами
         public void loadDir(string path, ListBox onelistBox1)
         {
-
             onelistBox1.Items.Clear();
             DirectoryInfo dir = new DirectoryInfo(path);
             DirectoryInfo[] dirs = dir.GetDirectories();
@@ -146,6 +183,7 @@ namespace ConstructMetod
 
         }
 
+        //создание панели вывода содержания файла
         public void createWorkPanel(ListBox mlistBox, string search)
         {
             //new Tab Page создаём вкладку
@@ -162,8 +200,9 @@ namespace ConstructMetod
             RTB.Dock = DockStyle.Fill;
             RTB.Click += new System.EventHandler(this.RTB_Click);
             RTB.ContextMenuStrip = contextMenuStrip3;
-            RTB.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RTB_MouseDown);
             RTB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RTB_KeyDown);
+            RTB.MouseEnter += new EventHandler(this.RTB_MouseEnter);
+            RTB.MouseLeave += new EventHandler(this.RTB_MouseLeave);
 
 
             try
@@ -180,6 +219,18 @@ namespace ConstructMetod
 
         }
 
+        private void RTB_MouseLeave(object sender, EventArgs e)
+        {
+            statusLabel1.Text = "";
+        }
+
+        private void RTB_MouseEnter(object sender, EventArgs e)
+        {
+            RichTextBox RTBthis = (RichTextBox)sender;
+            statusLabel1.Text = RTBthis.Name;
+        }
+
+        //горячие клавишы
         private void RTB_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.S)
@@ -188,23 +239,7 @@ namespace ConstructMetod
             }
         }
 
-        private void RTB_MouseDown(object sender, MouseEventArgs e)
-        {
-
-            //if (e.Button == MouseButtons.Right)
-            //{
-
-            //    RichTextBox RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
-            //    System.Drawing.Point pt =RTB.PointToClient(Cursor.Position);
-
-            //    int index = RTB.GetCharIndexFromPosition(pt);
-            //    if (index != -1)
-            //    {
-
-            //    }
-            //}
-        }
-
+        //вывод заданного шрифта и размера выдиления
         private void RTB_Click(object sender, EventArgs e)
         {
 
@@ -221,16 +256,30 @@ namespace ConstructMetod
             }
         }
 
+        //выполняется при запуске программы. Проверка корневого каталога. Загрузка директории
         private void Form1_Load(object sender, EventArgs e)
         {
+            try
+            {
+                DirectoryInfo dirExcept = new DirectoryInfo(homeSearch);
+                dirExcept.GetDirectories();
+            }
+            catch (DirectoryNotFoundException noneDir)
+            {
+                statusLabel1.Text = "Отсутствие корневого каталога. Каталог создан";
+                DirectoryInfo mainDir = new DirectoryInfo(homeSearch);
+                mainDir.Create();
+            }
             loadDir(searchMain, listBox1);
         }
 
+        //выход из программы
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        //Открыть диалоговое меню для выбора файла находящийся за границе видемости
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Stream myStream = null;
@@ -271,6 +320,7 @@ namespace ConstructMetod
             }
         }
 
+        //Выбор соответствующего элемента при нажатии правй клавиши мыши
         private void listBox1_MouseDown(object sender, MouseEventArgs e)
 
         {
@@ -284,6 +334,7 @@ namespace ConstructMetod
             }
         }
 
+        //Перемещение на дерикторию выше
         private void назадToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -318,6 +369,7 @@ namespace ConstructMetod
             loadDir(searchMain, listBox1);
         }
 
+        //Открытие файла или папки по двойному нажатию
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
 
@@ -368,7 +420,11 @@ namespace ConstructMetod
                     {
                         directoryInfo.Create();
                         statusLabel1.Text = $"Создана папка с именем: {folderName}";
-                    }                    
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Папка с таким именем уже существует");
                 }
             }
             loadDir(searchMain, listBox1);
@@ -396,11 +452,16 @@ namespace ConstructMetod
                             statusLabel1.Text = $"Создан файл с именем: {fileName}";
                         }
                     }
+                    else
+                    {
+                        MessageBox.Show("Файл с таким именем уже существует.");
+                    }
                 }
             }
             loadDir(searchMain, listBox1);
         }
 
+        //удаляет в зависимости был ли это файл или папка
         private void удалитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -430,34 +491,42 @@ namespace ConstructMetod
 
         }
 
+        //проверяет над какой вкладкой находится курсор во время открытия контекстного меню 
         private void contextMenuStrip2_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             System.Drawing.Point pt = tabControl2.PointToClient(Cursor.Position);
             iPage = -1;
+
             for (int i = 0; i < tabControl2.TabCount; i++)
             {
                 if (tabControl2.GetTabRect(i).Contains(pt))
-                    iPage = i;
+                    iPage = i;//передаём номер вкладки над которой находится курсор
             }
         }
 
         private void Закрыть_ВкладкуToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            try
+            if (tabControl2.TabCount != 0)
             {
-                tabControl2.TabPages.Remove(tabControl2.TabPages[iPage]);
-            }
-            catch (ArgumentOutOfRangeException ex) { }
+                RichTextBox RTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
+                bool saveFile = SaveOrNoDialog(RTB.Name);
+                if (saveFile == true)
+                {
 
+                    tabControl2.TabPages.Remove(tabControl2.TabPages[iPage]);
+
+                }
+            }
         }
 
+        //производит сохранение файла в действующей вкладке
         private void Сохранить_ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RichTextBox rull_RTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
-            Console.WriteLine(searchMain + "\\" + rull_RTB.Name);
             rull_RTB.SaveFile(rull_RTB.Name);
         }
 
+        //Выравние произвдимое к выделенной области текста
         private void AlignCenter_Click(object sender, EventArgs e)
         {
             if (tabControl2.TabPages.Count > 0)
@@ -487,12 +556,14 @@ namespace ConstructMetod
             }
         }
 
+        //вернуться в корневую дерикторию
         private void homeButton_Click(object sender, EventArgs e)
         {
             loadDir("ConstructMetod", listBox1);
             searchMain = "ConstructMetod";
         }
 
+        //Открыть диалоговое окно задания шрифтов
         private void fontDialogButton_Click(object sender, EventArgs e)
         {
             fontDialog1.ShowColor = true;
@@ -509,6 +580,7 @@ namespace ConstructMetod
             }
         }
 
+        //синхронизирует выбор ширфта в главной форме с диалоговым окном шрифтов
         private void fontBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -523,12 +595,14 @@ namespace ConstructMetod
             catch (Exception args) { }
         }
 
+        //открывает список коллекции при вводе текста 
         private void fontBox_TextUpdate(object sender, EventArgs e)
         {
             fontBox.DroppedDown = true;
             fontBox_SelectedIndexChanged(fontBox, e);
         }
 
+        //синхронизация размера шрифта с окном выбора шрифтов
         private void sizeFontBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -542,11 +616,13 @@ namespace ConstructMetod
             catch (Exception asdfg) { }
         }
 
+        //выкидвыает список коллекции при вводе размера шрифта в соответствующий элемент
         private void sizeFontBox_TextUpdate(object sender, EventArgs e)
         {
             sizeFontBox_SelectedIndexChanged(sizeFontBox, e);
         }
 
+        //Открывает проводник путь которого указывает в директорию хранения всей файлов и папок
         private void открытьКорневуюПапкуToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -554,6 +630,7 @@ namespace ConstructMetod
 
         }
 
+        //Элементы контекстного меню в поле редактриования текста 
         private void вырезатьToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RichTextBox RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
@@ -600,7 +677,46 @@ namespace ConstructMetod
             statusLabel1.Text = $"Файл {rull_RTB.Name} успешно сохранён";
         }
 
+        //выводит окно с информацией о разработчике
+        private void оРазработчикеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            creatorInf infRazrab = new creatorInf();
+            infRazrab.Show();
+        }
 
+        //Перед закрытием формы предлагает сохранить все вкладки
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+            int countTabPage = tabControl2.TabCount;
+            if (countTabPage > 0)
+            {
+                bool saveFile = SaveOrNoDialog("");
+                while (tabControl2.TabCount != 0)
+                {
+                    RichTextBox richTextBox = (RichTextBox)tabControl2.TabPages[tabControl2.TabCount - 1].Controls[0];
+
+                    if (saveFile == true)
+                    {
+                        richTextBox.SaveFile(richTextBox.Name);
+                    }
+
+                    tabControl2.TabPages.Remove(tabControl2.TabPages[tabControl2.TabCount - 1]);
+                }
+            }
+        }
+
+        private void сохранитьВсёToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int i = tabControl2.TabCount;
+            while (i != 0)
+            {
+                RichTextBox richTextBox = (RichTextBox)tabControl2.TabPages[i - 1].Controls[0];
+                richTextBox.SaveFile(richTextBox.Name);
+                i--;
+
+            }
+        }
     }
 }
 

@@ -9,3 +9,5 @@ A:\Kursov\ConstructMetod\ConstructMetod\obj\Debug\ConstructMetod.csproj.CoreComp
 A:\Kursov\ConstructMetod\ConstructMetod\obj\Debug\ConstructMetod.exe
 A:\Kursov\ConstructMetod\ConstructMetod\obj\Debug\ConstructMetod.pdb
 A:\Kursov\ConstructMetod\ConstructMetod\obj\Debug\ConstructMetod.fileNameDialog.resources
+A:\Kursov\ConstructMetod\ConstructMetod\obj\Debug\ConstructMetod.creatorInf.resources
+A:\Kursov\ConstructMetod\ConstructMetod\obj\Debug\ConstructMetod.SaveOrNo.resources
