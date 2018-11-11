@@ -237,6 +237,7 @@ namespace ConstructMetod
             {
                 сохранитьToolStripMenuItem_Click(sender, e);
             }
+            loadDir(searchMain,listBox1);
         }
 
         //вывод заданного шрифта и размера выдиления
@@ -524,6 +525,7 @@ namespace ConstructMetod
         {
             RichTextBox rull_RTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
             rull_RTB.SaveFile(rull_RTB.Name);
+            loadDir(searchMain,listBox1);
         }
 
         //Выравние произвдимое к выделенной области текста
@@ -675,6 +677,7 @@ namespace ConstructMetod
             RichTextBox rull_RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
             rull_RTB.SaveFile(rull_RTB.Name);
             statusLabel1.Text = $"Файл {rull_RTB.Name} успешно сохранён";
+            loadDir(searchMain,listBox1);
         }
 
         //выводит окно с информацией о разработчике
@@ -714,8 +717,10 @@ namespace ConstructMetod
                 RichTextBox richTextBox = (RichTextBox)tabControl2.TabPages[i - 1].Controls[0];
                 richTextBox.SaveFile(richTextBox.Name);
                 i--;
-
+                statusLabel1.Text = "Все файлы успешно сохранены";
             }
+
+            loadDir(searchMain,listBox1);
         }
     }
 }
