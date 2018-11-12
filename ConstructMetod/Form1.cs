@@ -91,8 +91,7 @@ namespace ConstructMetod
                 }
                 else if (kostil == 2)
                 {
-                    name = frm2.fileOrFolder.Text.ToString() + tochka.ToString() + frm2.expansion.Text.ToString();
-                    Console.WriteLine(name);
+                    name = frm2.fileOrFolder.Text.ToString() + tochka.ToString() + frm2.expansion.Text.ToString();                   
                 }
             }
             else if (dr == DialogResult.Cancel)
@@ -103,9 +102,8 @@ namespace ConstructMetod
             return name;
         }
 
-        public bool SaveOrNoDialog(string nameFile)
-        {
-            bool resultReturn = false;          
+        public DialogResult SaveOrNoDialog(string nameFile)
+        {                    
             SaveOrNo formSave = new SaveOrNo();
             DialogResult result = new DialogResult();
             if (nameFile.Length != 0)
@@ -113,14 +111,8 @@ namespace ConstructMetod
                 string corName = onlyNameFile(nameFile);
                 formSave.label1.Text = $"Сохранить файл: {corName}";
             }
-            result = formSave.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                resultReturn = true;
-            }
-
-            return resultReturn;
+            result = formSave.ShowDialog();          
+            return result;
         }
 
         public string onlyNameFile(string searhName)
@@ -146,17 +138,24 @@ namespace ConstructMetod
             int len_fileName = correctName.Length;
             char charT;
 
-            for (int i = 0; i < len_fileName; i++)
+            if (correctName.Length != 0)
             {
-                charT = name[i];
-
-                if (charT == '[' | charT == ']' | charT == '{' | charT == '}' | charT == '.' | charT == '\\' | charT == '/' | charT == '|')
+                for (int i = 0; i < len_fileName; i++)
                 {
+                    charT = name[i];
 
-                    MessageBox.Show("Присутствуют недопустимые символы'[ ]{ }. \\/|'. Операция была отменена!");
-                    transact = false;
-                    break;
+                    if (charT == '[' | charT == ']' | charT == '{' | charT == '}' | charT == '.' | charT == '\\' | charT == '/' | charT == '|')
+                    {
+
+                        MessageBox.Show("Присутствуют недопустимые символы'[ ]{ }. \\/|'. Операция была отменена!");
+                        transact = false;
+                        break;
+                    }
                 }
+            }
+            else {
+                MessageBox.Show("Имя не было указано. Операция отменена");
+                transact = false;
             }
             return transact;
         }
@@ -169,10 +168,7 @@ namespace ConstructMetod
             DirectoryInfo[] dirs = dir.GetDirectories();
             foreach (DirectoryInfo crrDir in dirs)
             {
-
                 onelistBox1.Items.Add(crrDir);
-
-
             }
             FileInfo[] files = dir.GetFiles();
             foreach (FileInfo crrfile in files)
@@ -198,9 +194,9 @@ namespace ConstructMetod
             RTB.Name = (Path.Combine(search, mlistBox.SelectedItem.ToString()));
             RTB.Font = new System.Drawing.Font("Times New Roman", 24);
             RTB.Dock = DockStyle.Fill;
-            RTB.Click += new System.EventHandler(this.RTB_Click);
+            RTB.Click += new EventHandler(this.RTB_Click);
             RTB.ContextMenuStrip = contextMenuStrip3;
-            RTB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RTB_KeyDown);
+            RTB.KeyDown += new KeyEventHandler(this.RTB_KeyDown);
             RTB.MouseEnter += new EventHandler(this.RTB_MouseEnter);
             RTB.MouseLeave += new EventHandler(this.RTB_MouseLeave);
 
@@ -363,7 +359,7 @@ namespace ConstructMetod
             }
             catch (IndexOutOfRangeException index)
             {
-                loadDir(searchMain = "ConstructMetod", listBox1);
+                loadDir(searchMain =homeSearch, listBox1);
 
             }
 
@@ -510,13 +506,17 @@ namespace ConstructMetod
             if (tabControl2.TabCount != 0)
             {
                 RichTextBox RTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
-                bool saveFile = SaveOrNoDialog(RTB.Name);
-                if (saveFile == true)
+               DialogResult saveFile = SaveOrNoDialog(RTB.Name);
+                switch (saveFile)
                 {
-
-                    tabControl2.TabPages.Remove(tabControl2.TabPages[iPage]);
-
-                }
+                    case (DialogResult.Yes):
+                        RTB.SaveFile(RTB.Name);
+                        tabControl2.TabPages.Remove(tabControl2.TabPages[tabControl2.TabCount - 1]);
+                        break;
+                    case (DialogResult.No):
+                        tabControl2.TabPages.Remove(tabControl2.TabPages[tabControl2.TabCount - 1]);
+                        break;
+                }               
             }
         }
 
@@ -561,8 +561,8 @@ namespace ConstructMetod
         //вернуться в корневую дерикторию
         private void homeButton_Click(object sender, EventArgs e)
         {
-            loadDir("ConstructMetod", listBox1);
-            searchMain = "ConstructMetod";
+            loadDir(homeSearch, listBox1);
+            searchMain = homeSearch;
         }
 
         //Открыть диалоговое окно задания шрифтов
@@ -690,21 +690,30 @@ namespace ConstructMetod
         //Перед закрытием формы предлагает сохранить все вкладки
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-
             int countTabPage = tabControl2.TabCount;
             if (countTabPage > 0)
             {
-                bool saveFile = SaveOrNoDialog("");
-                while (tabControl2.TabCount != 0)
+                DialogResult saveFile = SaveOrNoDialog("");
+                if (saveFile != DialogResult.Cancel)
                 {
-                    RichTextBox richTextBox = (RichTextBox)tabControl2.TabPages[tabControl2.TabCount - 1].Controls[0];
-
-                    if (saveFile == true)
+                    while (tabControl2.TabCount != 0)
                     {
-                        richTextBox.SaveFile(richTextBox.Name);
-                    }
+                        RichTextBox richTextBox = (RichTextBox)tabControl2.TabPages[tabControl2.TabCount - 1].Controls[0];
 
-                    tabControl2.TabPages.Remove(tabControl2.TabPages[tabControl2.TabCount - 1]);
+                        switch (saveFile)
+                        {
+                            case (DialogResult.Yes):
+                                richTextBox.SaveFile(richTextBox.Name);
+                                tabControl2.TabPages.Remove(tabControl2.TabPages[tabControl2.TabCount - 1]);
+                                break;
+                            case (DialogResult.No):
+                                tabControl2.TabPages.Remove(tabControl2.TabPages[tabControl2.TabCount - 1]);
+                                break;
+                        }
+                    }
+                }
+                else {
+                    e.Cancel = true;
                 }
             }
         }
@@ -721,6 +730,26 @@ namespace ConstructMetod
             }
 
             loadDir(searchMain,listBox1);
+        }
+
+        //по нажатию кнопки закрывается активная вкладка
+        private void closeTab_Click(object sender, EventArgs e)
+        {
+            if (tabControl2.TabCount != 0)
+            {
+                RichTextBox RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
+                DialogResult saveFile = SaveOrNoDialog(RTB.Name);
+                switch (saveFile)
+                {
+                    case (DialogResult.Yes):
+                        RTB.SaveFile(RTB.Name);
+                        tabControl2.TabPages.Remove(tabControl2.TabPages[tabControl2.SelectedIndex]);
+                        break;
+                    case (DialogResult.No):
+                        tabControl2.TabPages.Remove(tabControl2.TabPages[tabControl2.SelectedIndex]);
+                        break;
+                }            
+            }
         }
     }
 }

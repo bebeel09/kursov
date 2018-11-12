@@ -88,6 +88,7 @@
             // 
             this.fileOrFolder.Font = new System.Drawing.Font("Times New Roman", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.fileOrFolder.Location = new System.Drawing.Point(15, 69);
+            this.fileOrFolder.MaxLength = 25;
             this.fileOrFolder.Name = "fileOrFolder";
             this.fileOrFolder.Size = new System.Drawing.Size(309, 29);
             this.fileOrFolder.TabIndex = 1;
