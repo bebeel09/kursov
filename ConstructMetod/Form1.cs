@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using System.Drawing.Text;
+using System.Drawing;
 
 
 
@@ -18,6 +19,7 @@ namespace ConstructMetod
         protected string homeSearch = "Catalog";
         protected int iPage = -1; //номер вкладки к которой обращаемся
         InstalledFontCollection font;//коллекция шрифтов предостовляемые системой
+        bool saveTransaction = true;
 
 
 
@@ -33,6 +35,19 @@ namespace ConstructMetod
             fontBox.Text = fontDialog1.Font.Name.ToString();
             sizeFontBox.Text = fontDialog1.Font.Size.ToString();
 
+        }
+
+        private void readOnlyWorkPanel(bool readOnly) {
+            int pageNum = 0;
+           
+            if (tabControl2.TabCount > -1) {
+                while (pageNum < tabControl2.TabCount) {
+                    RichTextBox RTB = (RichTextBox)tabControl2.TabPages[pageNum].Controls[0];
+                    RTB.ReadOnly = readOnly;
+                    RTB.BackColor =Color.White;
+                    pageNum++;
+                }
+            }
         }
 
         //метод передающий все шрифты установленные на ПК, а так же задёт размеры
@@ -191,6 +206,9 @@ namespace ConstructMetod
 
             //new RichTextBox окно для ввода текста в вкладке
             RichTextBox RTB = new RichTextBox();
+            if (checkBox1.Checked == true) {
+                RTB.ReadOnly = true;
+            }
             RTB.Name = (Path.Combine(search, mlistBox.SelectedItem.ToString()));
             RTB.Font = new System.Drawing.Font("Times New Roman", 24);
             RTB.Dock = DockStyle.Fill;
@@ -256,6 +274,7 @@ namespace ConstructMetod
         //выполняется при запуске программы. Проверка корневого каталога. Загрузка директории
         private void Form1_Load(object sender, EventArgs e)
         {
+            checkBox1.Checked = true;
             try
             {
                 DirectoryInfo dirExcept = new DirectoryInfo(homeSearch);
@@ -506,17 +525,23 @@ namespace ConstructMetod
             if (tabControl2.TabCount != 0)
             {
                 RichTextBox RTB = (RichTextBox)tabControl2.TabPages[iPage].Controls[0];
-               DialogResult saveFile = SaveOrNoDialog(RTB.Name);
-                switch (saveFile)
+                if (checkBox1.Checked == false)
                 {
-                    case (DialogResult.Yes):
-                        RTB.SaveFile(RTB.Name);
-                        tabControl2.TabPages.Remove(tabControl2.TabPages[tabControl2.TabCount - 1]);
-                        break;
-                    case (DialogResult.No):
-                        tabControl2.TabPages.Remove(tabControl2.TabPages[tabControl2.TabCount - 1]);
-                        break;
-                }               
+                    DialogResult saveFile = SaveOrNoDialog(RTB.Name);             
+                    switch (saveFile)
+                    {
+                        case (DialogResult.Yes):
+                            RTB.SaveFile(RTB.Name);
+                            tabControl2.TabPages.Remove(tabControl2.TabPages[iPage]);
+                            break;
+                        case (DialogResult.No):
+                            tabControl2.TabPages.Remove(tabControl2.TabPages[iPage]);
+                            break;
+                    }
+                }
+                else {
+                    tabControl2.TabPages.Remove(tabControl2.TabPages[iPage]);
+                }
             }
         }
 
@@ -691,7 +716,7 @@ namespace ConstructMetod
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             int countTabPage = tabControl2.TabCount;
-            if (countTabPage > 0)
+            if (countTabPage > 0 & saveTransaction==true)
             {
                 DialogResult saveFile = SaveOrNoDialog("");
                 if (saveFile != DialogResult.Cancel)
@@ -735,7 +760,7 @@ namespace ConstructMetod
         //по нажатию кнопки закрывается активная вкладка
         private void closeTab_Click(object sender, EventArgs e)
         {
-            if (tabControl2.TabCount != 0)
+            if (tabControl2.TabCount != 0 & saveTransaction == true)
             {
                 RichTextBox RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
                 DialogResult saveFile = SaveOrNoDialog(RTB.Name);
@@ -748,7 +773,61 @@ namespace ConstructMetod
                     case (DialogResult.No):
                         tabControl2.TabPages.Remove(tabControl2.TabPages[tabControl2.SelectedIndex]);
                         break;
-                }            
+                }
+            }
+            else {
+                tabControl2.TabPages.Remove(tabControl2.TabPages[tabControl2.SelectedIndex]);
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            readOnlyWorkPanel(checkBox1.Checked);
+            if (checkBox1.Checked == true)
+            {
+                saveTransaction = false;
+                alignLeft.Enabled = false;
+                alignRight.Enabled = false;
+                AlignCenter.Enabled = false;
+                fontDialogButton.Enabled = false;
+                сохранитьВсёToolStripMenuItem.Enabled = false;
+                сохранитьToolStripMenuItem.Enabled = false;
+                Сохранить_ToolStripMenuItem.Enabled = false;
+                форматироватьСтрокуToolStripMenuItem.Enabled = false;
+                выровнятьToolStripMenuItem.Enabled = false;
+                newFile.Enabled = false;
+                создатьПапкуToolStripMenuItem.Enabled = false;
+                создатьФайлToolStripMenuItem.Enabled = false;
+                удалитьToolStripMenuItem.Enabled = false;
+            }
+            else {
+                saveTransaction = true;
+                alignLeft.Enabled = true;
+                alignRight.Enabled = true;
+                AlignCenter.Enabled = true;
+                fontDialogButton.Enabled = true;
+                сохранитьВсёToolStripMenuItem.Enabled = true;
+                сохранитьToolStripMenuItem.Enabled = true;
+                Сохранить_ToolStripMenuItem.Enabled = true;
+                форматироватьСтрокуToolStripMenuItem.Enabled = true;
+                выровнятьToolStripMenuItem.Enabled = true;
+                newFile.Enabled = true;
+                создатьПапкуToolStripMenuItem.Enabled = true;
+                создатьФайлToolStripMenuItem.Enabled = true;
+                удалитьToolStripMenuItem.Enabled = true;
+            }
+
+        }
+
+        private void задатьЦветToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK) {
+                if (tabControl2.TabPages.Count > 0)
+                {
+                    RichTextBox rull_RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
+                    rull_RTB.SelectionColor = colorDialog1.Color;
+                    
+                }
             }
         }
     }

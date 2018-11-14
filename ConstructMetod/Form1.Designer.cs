@@ -85,6 +85,7 @@
             this.поЛевомуКраюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.поПравомуКраюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.поЦентруToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -455,7 +456,7 @@
             this.форматироватьСтрокуToolStripMenuItem,
             this.выровнятьToolStripMenuItem});
             this.contextMenuStrip3.Name = "contextMenuStrip3";
-            this.contextMenuStrip3.Size = new System.Drawing.Size(211, 148);
+            this.contextMenuStrip3.Size = new System.Drawing.Size(211, 170);
             // 
             // сохранитьToolStripMenuItem
             // 
@@ -516,6 +517,7 @@
             this.задатьЦветToolStripMenuItem.Name = "задатьЦветToolStripMenuItem";
             this.задатьЦветToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.задатьЦветToolStripMenuItem.Text = "Задать цвет";
+            this.задатьЦветToolStripMenuItem.Click += new System.EventHandler(this.задатьЦветToolStripMenuItem_Click);
             // 
             // выровнятьToolStripMenuItem
             // 
@@ -548,11 +550,23 @@
             this.поЦентруToolStripMenuItem.Text = "По центру";
             this.поЦентруToolStripMenuItem.Click += new System.EventHandler(this.поЦентруToolStripMenuItem_Click);
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(690, 27);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(98, 17);
+            this.checkBox1.TabIndex = 4;
+            this.checkBox1.Text = "Режим чтения";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 500);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
@@ -641,6 +655,7 @@
         private System.Windows.Forms.ToolStripMenuItem поЦентруToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel1;
         private System.Windows.Forms.ToolStripMenuItem сохранитьВсёToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 
