@@ -456,7 +456,7 @@
             this.форматироватьСтрокуToolStripMenuItem,
             this.выровнятьToolStripMenuItem});
             this.contextMenuStrip3.Name = "contextMenuStrip3";
-            this.contextMenuStrip3.Size = new System.Drawing.Size(211, 170);
+            this.contextMenuStrip3.Size = new System.Drawing.Size(211, 148);
             // 
             // сохранитьToolStripMenuItem
             // 
@@ -552,8 +552,7 @@
             // 
             // checkBox1
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(690, 27);
+            this.checkBox1.Location = new System.Drawing.Point(443, 28);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(98, 17);
             this.checkBox1.TabIndex = 4;
