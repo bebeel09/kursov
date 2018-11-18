@@ -9,7 +9,7 @@ using System.Drawing;
 
 namespace ConstructMetod
 {
-    public partial class Form1 : Form
+    public partial class mainForm : Form
 
     {
         string searchMain = "Catalog"; // путь чтения и загрузки файлов
@@ -18,9 +18,8 @@ namespace ConstructMetod
         InstalledFontCollection font;//коллекция шрифтов предостовляемые системой
         bool saveTransaction = true;
 
-
-
-        public Form1()
+        //Начальная инициализация объектов формы и параметров
+        public mainForm()
         {
             InitializeComponent();
 
@@ -34,6 +33,7 @@ namespace ConstructMetod
 
         }
 
+        //метод для проверки пути прои сохранении файла
         private void controlSavePath(RichTextBox RTB, string savePatch)
         {
             FileInfo filePath = new FileInfo(savePatch);
@@ -58,6 +58,7 @@ namespace ConstructMetod
             }
         }
 
+        //метод который переключает открытые вкладки в режим чтения
         private void readOnlyWorkPanel(bool readOnly)
         {
             int pageNum = 0;
@@ -141,6 +142,7 @@ namespace ConstructMetod
             return name;
         }
 
+        //метод вызова диалогового окна сохранения и передача в него некторых параметров
         public DialogResult SaveOrNoDialog(string nameFile)
         {
             SaveOrNo formSave = new SaveOrNo();
@@ -154,6 +156,7 @@ namespace ConstructMetod
             return result;
         }
 
+        //метод отделения названия файла от остального пути
         public string onlyNameFile(string searhName)
         {
             string only_NameFile = searhName;
@@ -790,7 +793,7 @@ namespace ConstructMetod
         //по нажатию кнопки закрывается активная вкладка
         private void closeTab_Click(object sender, EventArgs e)
         {
-            if (tabControl2.TabCount >= 0 & saveTransaction == true)
+            if (tabControl2.TabCount > 0 & saveTransaction == true)
             {
                 RichTextBox RTB = (RichTextBox)tabControl2.TabPages[tabControl2.SelectedIndex].Controls[0];
                 DialogResult saveFile = SaveOrNoDialog(RTB.Name);
@@ -816,6 +819,7 @@ namespace ConstructMetod
 
         }
 
+        //включён ли режим четения?
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             readOnlyWorkPanel(checkBox1.Checked);
